@@ -176,7 +176,7 @@ const Home: FC = () => {
                 transition={{ duration: 1.5 }}
                 src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/697e8e403ab841ea9326cc28/85b1f1d88_logo-full__1_-removebg-preview.png" 
                 alt="Logo" 
-                className="relative md:top-8 h-36 md:h-48 object-contain drop-shadow-sm" 
+                className="relative top-8 md:top-8 h-36 md:h-48 object-contain drop-shadow-sm" 
               />
             </div>
             
@@ -244,7 +244,7 @@ const Home: FC = () => {
                   className="w-full h-full object-cover hover:scale-110 transition-transform duration-[2s]" 
                 />
               </div>
-              <div className="absolute -bottom-10 -right-10 p-10 bg-white rounded-[3rem] shadow-xl max-w-[280px] border border-[#F0F4F0]">
+              <div className="absolute -bottom-10 -right-3 p-10 bg-white rounded-[3rem] shadow-xl max-w-[280px] border border-[#F0F4F0]">
                 <Heart className="w-8 h-8 text-[#A3B18A] mb-4" fill="#A3B18A" fillOpacity={0.2} />
                 <h4 className="font-serif text-2xl text-[#2D362E] mb-2">Escuta Profunda</h4>
                 <p className="text-sm text-[#5C6B5E] font-light leading-relaxed">Processos únicos construídos com sensibilidade e respeito.</p>
