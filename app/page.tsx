@@ -164,7 +164,7 @@ const siteData: SiteData = {
 
 const Home: FC = () => {
   return (
-    <main className="min-h-screen bg-[#F8F9F5] font-sans text-[#2D362E] selection:bg-[#A3B18A]/30">
+    <main className="min-h-screen overflow-x-clip bg-[#F8F9F5] font-sans text-[#2D362E] selection:bg-[#A3B18A]/30">
       <Navbar />
       {/* Importação de Fontes (Simulada para o ambiente Next.js/Tailwind) */}
       <style jsx global>{`
@@ -372,7 +372,6 @@ const Home: FC = () => {
       {/* Seção Público-Alvo */}
       <section className="py-32 px-6 bg-[#2D362E] text-white rounded-[4rem] mx-4 md:mx-10 my-20 overflow-hidden relative">
         <div className="absolute inset-0 opacity-20">
-          <img src="" alt="" className="w-full h-full object-cover" />
         </div>
 
         <div className="max-w-5xl mx-auto relative z-10">

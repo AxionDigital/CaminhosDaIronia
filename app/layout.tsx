@@ -14,9 +14,31 @@ const playfairDisplay = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  title: "Caminhos da Ironia - Terapias Integrativas & Vibracionais",
-  description: "Acompanhamento emocional, energético e consciente para quem busca equilíbrio, clareza interior e fortalecimento pessoal.",
+  title: "Terapias Integrativas | Caminhos da Ironia",
+  description:
+    "Acompanhamento emocional e energético com terapias integrativas e vibracionais para equilíbrio emocional, clareza e fortalecimento interior.",
+  
+  openGraph: {
+    title: "Caminhos da Ironia — Terapias Integrativas",
+    description:
+      "Atendimento terapêutico para organização emocional, autoconhecimento e equilíbrio energético.",
+    images: [
+      {
+        url: "/favicon.ico",
+        width: 1200,
+        height: 630,
+      },
+    ],
+  },
+
+  twitter: {
+    card: "summary_large_image",
+    title: "Terapias Integrativas",
+    description:
+      "Equilíbrio emocional e energético com acompanhamento terapêutico sensível e consciente.",
+  },
 };
+
 
 export default function RootLayout({
   children,
