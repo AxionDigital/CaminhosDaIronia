@@ -115,14 +115,14 @@ const Navbar: FC = () => {
 
           {/* CTA */}
           <motion.a
-                href='https://wa.me/5517997860845'
-                className="group relative px-5 py-3 bg-[#4A5D4E] text-white rounded-full text-xs tracking-[0.2em] uppercase overflow-hidden transition-all duration-500"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <span className="relative z-10">Agendar</span>
-                <div className="absolute inset-0 bg-[#5C6B5E] translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
-              </motion.a>
+            href='https://wa.me/5517997860845'
+            className="group relative px-5 py-3 bg-[#4A5D4E] text-white rounded-full text-xs tracking-[0.2em] uppercase overflow-hidden transition-all duration-500"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <span className="relative z-10">Agendar</span>
+            <div className="absolute inset-0 bg-[#5C6B5E] translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
+          </motion.a>
         </div>
       </div>
     </header>
@@ -372,6 +372,10 @@ const Home: FC = () => {
       {/* Seção Público-Alvo */}
       <section className="py-32 px-6 bg-[#2D362E] text-white rounded-[4rem] mx-4 md:mx-10 my-20 overflow-hidden relative">
         <div className="absolute inset-0 opacity-20">
+          <img
+            src="https://cdn.pixabay.com/photo/2016/12/27/17/10/pendulum-1934311_1280.jpg"
+            alt="Pêndulo de radiestesia"
+          />
         </div>
 
         <div className="max-w-5xl mx-auto relative z-10">
