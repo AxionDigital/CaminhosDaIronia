@@ -91,6 +91,44 @@ const ToolItem: FC<ToolItemProps> = ({ icon: IconComponent, title, description, 
   </motion.div>
 );
 
+const Navbar: FC = () => {
+  return (
+    <header className="fixed top-0 left-0 w-full z-50">
+      <div className="mx-auto max-w-7xl px-6">
+        <div className="mt-4 flex items-center justify-between rounded-full border border-[#E2E8F0] bg-white/70 backdrop-blur-md shadow-sm px-6 py-3">
+
+          {/* Logo */}
+          <a href="#" className="flex items-center gap-3">
+            <img
+              src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/697e8e403ab841ea9326cc28/85b1f1d88_logo-full__1_-removebg-preview.png"
+              alt="Logo"
+              className="h-10 w-auto object-contain"
+            />
+          </a>
+
+          {/* Links */}
+          <nav className="hidden md:flex items-center gap-10 text-sm tracking-wide text-[#5C6B5E]">
+            <a href="#sobre" className="hover:text-[#2D362E] transition-colors">Sobre</a>
+            <a href="#servicos" className="hover:text-[#2D362E] transition-colors">Serviços</a>
+            <a href="#contato" className="hover:text-[#2D362E] transition-colors">Contato</a>
+          </nav>
+
+          {/* CTA */}
+          <motion.a
+                href='https://wa.me/5517997860845'
+                className="group relative px-5 py-3 bg-[#4A5D4E] text-white rounded-full text-xs tracking-[0.2em] uppercase overflow-hidden transition-all duration-500"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <span className="relative z-10">Agendar</span>
+                <div className="absolute inset-0 bg-[#5C6B5E] translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
+              </motion.a>
+        </div>
+      </div>
+    </header>
+  );
+};
+
 // --- Dados ---
 
 const siteData: SiteData = {
@@ -117,8 +155,8 @@ const siteData: SiteData = {
   ],
   socialLinks: [
     { icon: Instagram, href: "https://www.instagram.com/caminhosdaironia?utm_source=qr&igsh=MWR3ZjE1N2VpYXFzeA%3D%3D", label: "Instagram" },
-    { icon: MessageCircle, href: "#", label: "WhatsApp" },
-    { icon: Mail, href: "#", label: "Email" }
+    { icon: MessageCircle, href: "https://wa.me/5517997860845", label: "WhatsApp" },
+    { icon: Mail, href: "mailto:contato@caminhosdaironia.com", label: "Email" }
   ]
 };
 
@@ -127,6 +165,7 @@ const siteData: SiteData = {
 const Home: FC = () => {
   return (
     <main className="min-h-screen bg-[#F8F9F5] font-sans text-[#2D362E] selection:bg-[#A3B18A]/30">
+      <Navbar />
       {/* Importação de Fontes (Simulada para o ambiente Next.js/Tailwind) */}
       <style jsx global>{`
         @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Montserrat:wght@200;300;400;500&display=swap');
@@ -143,60 +182,50 @@ const Home: FC = () => {
       {/* Seção Hero */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0">
-          <img 
-            src="https://images.unsplash.com/photo-1545205597-3d9d02c29597?w=1920" 
-            alt="Natureza serena" 
-            className="w-full h-full object-cover scale-105" 
+          <img
+            src="https://images.unsplash.com/photo-1545205597-3d9d02c29597?w=1920"
+            alt="Natureza serena"
+            className="w-full h-full object-cover scale-105"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-[#F8F9F5]/80 via-[#F8F9F5]/60 to-[#F8F9F5]" />
         </div>
-        
+
         {/* Elementos Decorativos Flutuantes */}
-        <motion.div 
+        <motion.div
           animate={{ y: [0, -20, 0], opacity: [0.1, 0.2, 0.1] }}
           transition={{ duration: 8, repeat: Infinity }}
-          className="absolute top-20 left-10 w-96 h-96 bg-[#A3B18A]/20 rounded-full blur-[100px]" 
+          className="absolute top-20 left-10 w-96 h-96 bg-[#A3B18A]/20 rounded-full blur-[100px]"
         />
-        <motion.div 
+        <motion.div
           animate={{ y: [0, 20, 0], opacity: [0.1, 0.15, 0.1] }}
           transition={{ duration: 10, repeat: Infinity, delay: 1 }}
-          className="absolute bottom-20 right-10 w-[500px] h-[500px] bg-[#DDE5D7]/30 rounded-full blur-[120px]" 
+          className="absolute bottom-20 right-10 w-[500px] h-[500px] bg-[#DDE5D7]/30 rounded-full blur-[120px]"
         />
 
         <div className="relative z-10 max-w-5xl mx-auto px-6 text-center">
-          <motion.div 
-            initial={{ opacity: 0, y: 40 }} 
-            animate={{ opacity: 1, y: 0 }} 
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1.2, ease: [0.21, 0.47, 0.32, 0.98] }}
           >
-            <div className="flex justify-center mb-12">
-              <motion.img 
-                initial={{ scale: 0.9, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                transition={{ duration: 1.5 }}
-                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/697e8e403ab841ea9326cc28/85b1f1d88_logo-full__1_-removebg-preview.png" 
-                alt="Logo" 
-                className="relative top-8 md:top-8 h-36 md:h-48 object-contain drop-shadow-sm" 
-              />
-            </div>
-            
-            <h1 className="font-serif text-5xl md:text-7xl lg:text-8xl text-[#2D362E] leading-[0.9] mb-8">
+
+            <h1 className="text-2xl md:text-4xl uppercase lg:text-5xl block mt-4 font-sans font-extralight tracking-[0.2em] text-[#A3B18A]">
               Terapias Integrativas
               <br />
               <span className="text-3xl md:text-5xl lg:text-6xl block mt-4 font-sans font-extralight tracking-[0.2em] text-[#A3B18A]">
                 & VIBRACIONAIS
               </span>
             </h1>
-            
+
             <p className="text-lg md:text-2xl text-[#5C6B5E] font-light max-w-3xl mx-auto leading-relaxed mb-14 font-sans">
-              Acompanhamento emocional e energético para quem busca 
-              <span className="font-normal text-[#2D362E]"> equilíbrio, clareza e fortalecimento </span> 
+              Acompanhamento emocional e energético para quem busca
+              <span className="font-normal text-[#A3B18A]"> equilíbrio, clareza e fortalecimento </span>
               interior através de uma abordagem consciente.
             </p>
-            
+
             <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
-              <motion.a 
-                href='#' 
+              <motion.a
+                href='https://wa.me/5517997860845'
                 className="group relative px-10 py-5 bg-[#4A5D4E] text-white rounded-full text-sm tracking-[0.2em] uppercase overflow-hidden transition-all duration-500"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
@@ -204,9 +233,9 @@ const Home: FC = () => {
                 <span className="relative z-10">Agendar Sessão</span>
                 <div className="absolute inset-0 bg-[#5C6B5E] translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
               </motion.a>
-              
-              <motion.a 
-                href="#sobre" 
+
+              <motion.a
+                href="#sobre"
                 className="px-10 py-5 border border-[#A3B18A] text-[#4A5D4E] rounded-full text-sm tracking-[0.2em] uppercase hover:bg-[#A3B18A]/10 transition-all duration-500"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
@@ -215,8 +244,8 @@ const Home: FC = () => {
               </motion.a>
             </div>
           </motion.div>
-          
-          <motion.div 
+
+          <motion.div
             className="absolute bottom-10 left-1/2 -translate-x-1/2"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -230,7 +259,7 @@ const Home: FC = () => {
       <section id="sobre" className="py-32 md:py-48 px-6 relative">
         <div className="max-w-6xl mx-auto">
           <div className="grid md:grid-cols-2 gap-20 items-center">
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, x: -50 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
@@ -238,10 +267,10 @@ const Home: FC = () => {
               className="relative"
             >
               <div className="aspect-[4/5] rounded-[4rem] overflow-hidden shadow-2xl">
-                <img 
-                  src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=800" 
-                  alt="Meditação" 
-                  className="w-full h-full object-cover hover:scale-110 transition-transform duration-[2s]" 
+                <img
+                  src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=800"
+                  alt="Meditação"
+                  className="w-full h-full object-cover hover:scale-110 transition-transform duration-[2s]"
                 />
               </div>
               <div className="absolute -bottom-10 -right-3 p-10 bg-white rounded-[3rem] shadow-xl max-w-[280px] border border-[#F0F4F0]">
@@ -250,7 +279,7 @@ const Home: FC = () => {
                 <p className="text-sm text-[#5C6B5E] font-light leading-relaxed">Processos únicos construídos com sensibilidade e respeito.</p>
               </div>
             </motion.div>
-            
+
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -276,9 +305,9 @@ const Home: FC = () => {
       </section>
 
       {/* Seção Serviços */}
-      <section className="py-32 px-6 bg-[#F0F4F0]/50 relative">
+      <section id='servicos' className="py-32 px-6 bg-[#F0F4F0]/50 relative">
         <div className="max-w-6xl mx-auto">
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -290,7 +319,7 @@ const Home: FC = () => {
               Cada atendimento é uma jornada personalizada, desenhada para atender as necessidades sutis do seu campo emocional.
             </p>
           </motion.div>
-          
+
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {siteData.services.map((service, index) => (
               <ServiceCard key={service.title} {...service} index={index} />
@@ -303,7 +332,7 @@ const Home: FC = () => {
       <section className="py-32 md:py-48 px-6">
         <div className="max-w-6xl mx-auto">
           <div className="grid lg:grid-cols-2 gap-24 items-center">
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
@@ -316,15 +345,15 @@ const Home: FC = () => {
                 ))}
               </div>
             </motion.div>
-            
-            <motion.div 
+
+            <motion.div
               initial={{ opacity: 0, x: 40 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               className="order-1 lg:order-2"
             >
               <span className="text-xs tracking-[0.4em] text-[#A3B18A] uppercase mb-6 block font-medium">Recursos</span>
-              <h2 className="font-serif text-4xl md:text-6xl text-[#2D362E] mb-8 leading-tight">Alquimia de <br/><span className="italic">Ferramentas</span></h2>
+              <h2 className="font-serif text-4xl md:text-6xl text-[#2D362E] mb-8 leading-tight">Alquimia de <br /><span className="italic">Ferramentas</span></h2>
               <p className="text-lg text-[#5C6B5E] font-light leading-relaxed mb-10">
                 Integramos diferentes saberes para criar um protocolo vibracional que ressoe com sua frequência atual.
               </p>
@@ -343,9 +372,9 @@ const Home: FC = () => {
       {/* Seção Público-Alvo */}
       <section className="py-32 px-6 bg-[#2D362E] text-white rounded-[4rem] mx-4 md:mx-10 my-20 overflow-hidden relative">
         <div className="absolute inset-0 opacity-20">
-          <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=1920" alt="" className="w-full h-full object-cover" />
+          <img src="" alt="" className="w-full h-full object-cover" />
         </div>
-        
+
         <div className="max-w-5xl mx-auto relative z-10">
           <div className="grid md:grid-cols-2 gap-16 items-center">
             <motion.div
@@ -354,15 +383,15 @@ const Home: FC = () => {
               viewport={{ once: true }}
             >
               <span className="text-xs tracking-[0.4em] text-[#A3B18A] uppercase mb-6 block">Ressonância</span>
-              <h2 className="font-serif text-4xl md:text-6xl mb-8 leading-tight">Este caminho é <br/><span className="italic text-[#A3B18A]">para você?</span></h2>
+              <h2 className="font-serif text-4xl md:text-6xl mb-8 leading-tight">Este caminho é <br /><span className="italic text-[#A3B18A]">para você?</span></h2>
               <p className="text-white/60 text-lg font-light leading-relaxed">
                 Se você sente o chamado para um mergulho interno mais profundo, talvez estejamos em sintonia.
               </p>
             </motion.div>
-            
+
             <div className="space-y-6">
               {siteData.audiences.map((item, index) => (
-                <motion.div 
+                <motion.div
                   key={index}
                   initial={{ opacity: 0, x: 30 }}
                   whileInView={{ opacity: 1, x: 0 }}
@@ -382,7 +411,7 @@ const Home: FC = () => {
       </section>
 
       {/* Seção Contato */}
-      <section className="py-32 md:py-48 px-6 text-center">
+      <section id='contato' className="py-32 md:py-48 px-6 text-center">
         <div className="max-w-4xl mx-auto">
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
@@ -392,15 +421,15 @@ const Home: FC = () => {
           >
             <span className="text-xs tracking-[0.4em] text-[#A3B18A] uppercase mb-8 block font-medium">Início</span>
             <h2 className="font-serif text-5xl md:text-7xl text-[#2D362E] mb-10 leading-tight">
-              Vamos despertar sua <br/><span className="italic text-[#5C6B5E]">melhor frequência?</span>
+              Vamos despertar sua <br /><span className="italic text-[#5C6B5E]">melhor frequência?</span>
             </h2>
             <p className="text-xl text-[#5C6B5E] font-light mb-16 max-w-2xl mx-auto leading-relaxed">
               Agende uma conversa inicial para sentirmos como posso te apoiar na sua jornada de transformação.
             </p>
-            
+
             <div className="flex flex-col sm:flex-row items-center justify-center gap-8">
-              <motion.a 
-                href='#' 
+              <motion.a
+                href='https://wa.me/5517997860845'
                 className="flex items-center gap-4 px-12 py-6 bg-[#4A5D4E] text-white rounded-full text-sm tracking-[0.2em] uppercase shadow-xl shadow-[#4A5D4E]/20 hover:shadow-2xl hover:shadow-[#4A5D4E]/40 transition-all duration-500"
                 whileHover={{ y: -5 }}
               >
@@ -408,9 +437,9 @@ const Home: FC = () => {
                 Agendar Sessão Online
                 <ArrowRight className="w-4 h-4" />
               </motion.a>
-              
-              <motion.a 
-                href="#" 
+
+              <motion.a
+                href="mailto:contato@caminhosdaironia.com"
                 className="flex items-center gap-4 px-12 py-6 border border-[#A3B18A] text-[#4A5D4E] rounded-full text-sm tracking-[0.2em] uppercase hover:bg-[#A3B18A]/10 transition-all duration-500"
                 whileHover={{ y: -5 }}
               >
@@ -418,12 +447,12 @@ const Home: FC = () => {
                 Enviar Mensagem
               </motion.a>
             </div>
-            
+
             <div className="mt-24 flex items-center justify-center gap-8">
               {siteData.socialLinks.map((link) => (
-                <motion.a 
-                  key={link.label} 
-                  href={link.href} 
+                <motion.a
+                  key={link.label}
+                  href={link.href}
                   whileHover={{ y: -10, color: '#4A5D4E' }}
                   className="w-16 h-16 rounded-full bg-white border border-[#E2E8F0] flex items-center justify-center text-[#A3B18A] shadow-sm hover:shadow-md transition-all duration-300"
                 >
@@ -440,32 +469,32 @@ const Home: FC = () => {
         <div className="max-w-6xl mx-auto">
           <div className="grid md:grid-cols-4 gap-16 mb-20">
             <div className="md:col-span-2">
-              <img 
-                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/697e8e403ab841ea9326cc28/85b1f1d88_logo-full__1_-removebg-preview.png" 
-                className="h-24 mb-8 grayscale opacity-80 hover:grayscale-0 transition-all duration-700" 
-                alt="Logo" 
+              <img
+                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/697e8e403ab841ea9326cc28/85b1f1d88_logo-full__1_-removebg-preview.png"
+                className="h-24 mb-8 grayscale opacity-80 hover:grayscale-0 transition-all duration-700"
+                alt="Logo"
               />
               <p className="text-[#5C6B5E] font-light leading-relaxed max-w-sm text-lg">
                 Acompanhamento emocional, energético e consciente para sua jornada de fortalecimento pessoal e equilíbrio integral.
               </p>
             </div>
-            
+
             <div>
               <h4 className="font-serif text-2xl text-[#2D362E] mb-8">Navegação</h4>
               <ul className="space-y-4 text-[#5C6B5E] font-light">
                 <li><a href="#sobre" className="hover:text-[#A3B18A] transition-colors">Sobre o Trabalho</a></li>
                 <li><a href="#servicos" className="hover:text-[#A3B18A] transition-colors">Caminhos de Cura</a></li>
-                <li><a href="#contato" className="hover:text-[#A3B18A] transition-colors">Agendamento</a></li>
+                <li><a href="https://wa.me/5517997860845" className="hover:text-[#A3B18A] transition-colors">Agendamento</a></li>
               </ul>
             </div>
-            
+
             <div>
               <h4 className="font-serif text-2xl text-[#2D362E] mb-8">Conexão</h4>
               <p className="text-[#5C6B5E] font-light mb-6">Sinta-se à vontade para entrar em contato e tirar suas dúvidas.</p>
-              <a href="#" className="text-[#A3B18A] font-medium tracking-widest uppercase text-xs hover:underline">Iniciar Jornada →</a>
+              <a href="#contato" className="text-[#A3B18A] font-medium tracking-widest uppercase text-xs hover:underline">Iniciar Jornada →</a>
             </div>
           </div>
-          
+
           <div className="pt-12 border-t border-[#DDE5D7] flex flex-col md:row items-center justify-between gap-6">
             <p className="text-sm text-[#5C6B5E]/60 font-light">
               © {new Date().getFullYear()} · Caminhos da Ironia. Alquimia de Ser Presente.
