@@ -7,6 +7,7 @@ import {
   FileCode, Headphones, Waves, Check, Eye, Fingerprint, ArrowRight,
   Mail, Instagram, MessageCircle, LucideProps
 } from 'lucide-react';
+import Image from 'next/image';
 
 /**
  * MELHORIAS DE DESIGN APLICADAS:
@@ -372,12 +373,16 @@ const Home: FC = () => {
       {/* Seção Público-Alvo */}
       <section className="py-32 px-6 bg-[#2D362E] text-white rounded-[4rem] mx-4 md:mx-10 my-20 overflow-hidden relative">
         <div className="absolute inset-0 opacity-20">
-          <img
+          <Image
             src="https://cdn.pixabay.com/photo/2016/12/27/17/10/pendulum-1934311_1280.jpg"
-            alt="Pêndulo de radiestesia"
+            alt="Pendulo"
+            fill
+            priority
+            sizes="100vw"
+            quality={100}
+            className="object-cover"
           />
         </div>
-
         <div className="max-w-5xl mx-auto relative z-10">
           <div className="grid md:grid-cols-2 gap-16 items-center">
             <motion.div
