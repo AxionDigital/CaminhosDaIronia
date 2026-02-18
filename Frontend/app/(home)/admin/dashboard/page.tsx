@@ -91,7 +91,7 @@ export default function AdminDashboard() {
               </div>
               <span className="font-serif font-bold text-xl">Admin</span>
             </motion.div>
-          )}
+          )};
           <button
             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
             className="p-2 hover:bg-[#F8F9F5] rounded-lg transition-colors"
