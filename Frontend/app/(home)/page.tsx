@@ -8,6 +8,7 @@ import {
   Mail, Instagram, MessageCircle, LucideProps
 } from 'lucide-react';
 import Image from 'next/image';
+import NavBar from '../components/NavBar';
 
 /**
  * MELHORIAS DE DESIGN APLICADAS:
@@ -92,44 +93,6 @@ const ToolItem: FC<ToolItemProps> = ({ icon: IconComponent, title, description, 
   </motion.div>
 );
 
-const Navbar: FC = () => {
-  return (
-    <header className="fixed top-0 left-0 w-full z-50">
-      <div className="mx-auto max-w-7xl px-6">
-        <div className="mt-4 flex items-center justify-between rounded-full border border-[#E2E8F0] bg-white/70 backdrop-blur-md shadow-sm px-6 py-3">
-
-          {/* Logo */}
-          <a href="#" className="flex items-center gap-3">
-            <img
-              src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/697e8e403ab841ea9326cc28/85b1f1d88_logo-full__1_-removebg-preview.png"
-              alt="Logo"
-              className="h-10 w-auto object-contain"
-            />
-          </a>
-
-          {/* Links */}
-          <nav className="hidden md:flex items-center gap-10 text-sm tracking-wide text-[#5C6B5E]">
-            <a href="#sobre" className="hover:text-[#2D362E] transition-colors">Sobre</a>
-            <a href="#servicos" className="hover:text-[#2D362E] transition-colors">Serviços</a>
-            <a href="#contato" className="hover:text-[#2D362E] transition-colors">Contato</a>
-          </nav>
-
-          {/* CTA */}
-          <motion.a
-            href='https://wa.me/5517997860845'
-            className="group relative px-5 py-3 bg-[#4A5D4E] text-white rounded-full text-xs tracking-[0.2em] uppercase overflow-hidden transition-all duration-500"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <span className="relative z-10">Agendar</span>
-            <div className="absolute inset-0 bg-[#5C6B5E] translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
-          </motion.a>
-        </div>
-      </div>
-    </header>
-  );
-};
-
 // --- Dados ---
 
 const siteData: SiteData = {
@@ -166,7 +129,7 @@ const siteData: SiteData = {
 const Home: FC = () => {
   return (
     <main className="min-h-screen overflow-x-clip bg-[#F8F9F5] font-sans text-[#2D362E] selection:bg-[#A3B18A]/30">
-      <Navbar />
+      <NavBar />
       {/* Importação de Fontes (Simulada para o ambiente Next.js/Tailwind) */}
       <style jsx global>{`
         @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Montserrat:wght@200;300;400;500&display=swap');
@@ -418,6 +381,109 @@ const Home: FC = () => {
         </div>
       </section>
 
+      {/* Seção Espelhamento de Consciência */}
+      <section className="py-32 px-6 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-[#F0F4F0] via-[#F8F9F5] to-[#DDE5D7]/60" />
+
+        <motion.div
+          animate={{ opacity: [0.15, 0.25, 0.15], scale: [1, 1.05, 1] }}
+          transition={{ duration: 10, repeat: Infinity }}
+          className="absolute -top-40 -right-40 w-[600px] h-[600px] bg-[#A3B18A]/30 rounded-full blur-[140px]"
+        />
+
+        <div className="relative z-10 max-w-6xl mx-auto">
+          <div className="grid lg:grid-cols-2 gap-20 items-center">
+
+            {/* Texto */}
+            <motion.div
+              initial={{ opacity: 0, x: -40 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.9 }}
+            >
+              <span className="inline-flex items-center gap-3 px-6 py-2 rounded-full bg-[#4A5D4E]/10 text-[#4A5D4E] text-xs tracking-[0.3em] uppercase mb-8">
+                <Eye className="w-4 h-4" />
+                Bônus Gratuito
+              </span>
+
+              <h2 className="font-serif text-4xl md:text-6xl text-[#2D362E] mb-8 leading-tight">
+                Espelhamento de <br />
+                <span className="italic text-[#5C6B5E]">Consciência do Momento Atual</span>
+              </h2>
+
+              <p className="text-lg text-[#5C6B5E] font-light leading-relaxed mb-10 max-w-xl">
+                Uma leitura sensível do seu campo no momento presente.
+                Sem julgamento, sem promessas — apenas clareza sobre o que está ativo,
+                disponível e pedindo atenção agora.
+              </p>
+
+              <ul className="space-y-4 text-[#5C6B5E] font-light mb-12">
+                {["Leitura do campo energético atual",
+                  "Identificação do tema que pede atenção agora",
+                  "Compreensão da sua vibração no momento presente",
+                  "Devolutiva consciente e orientadora"].map(li => (
+                    <li key={li}>• {li}</li>
+                  ))}
+              </ul>
+
+              <div className="flex flex-col sm:flex-row gap-6">
+                <motion.a
+                  href="/agendamento/espelhamento"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="flex items-center justify-center text-center gap-4 px-10 py-5 bg-[#4A5D4E] text-white rounded-full text-sm tracking-[0.2em] uppercase shadow-xl shadow-[#4A5D4E]/20"
+                >
+                  Agendar Gratuitamente
+                  <ArrowRight className="w-4 h-4" />
+                </motion.a>
+
+                <motion.a
+                  href="#contato"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="flex items-center justify-center text-center gap-4 px-10 py-5 border border-[#A3B18A] text-[#4A5D4E] rounded-full text-sm tracking-[0.2em] uppercase hover:bg-[#A3B18A]/10 transition"
+                >
+                  Entender a Mentoria
+                </motion.a>
+
+
+              </div>
+              <p className="mt-6 text-xs text-center text-[#5C6B5E]/60 tracking-widest uppercase">
+                Atendimento online · Vagas limitadas por semana
+              </p>
+            </motion.div>
+
+            {/* Card Destaque */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 1 }}
+              className="relative"
+            >
+              <div className="p-12 bg-white/70 backdrop-blur border border-[#E2E8F0] rounded-[3.5rem] shadow-2xl">
+                <Fingerprint className="w-10 h-10 text-[#A3B18A] mb-6" />
+
+                <h3 className="font-serif text-2xl text-[#2D362E] mb-6">
+                  Para quem é esse espelhamento?
+                </h3>
+
+                <p className="text-[#5C6B5E] font-light leading-relaxed mb-8">
+                  Para quem sente confusão, repetição de padrões ou necessidade de
+                  clareza antes de iniciar um processo mais profundo.
+                </p>
+
+                <div className="p-6 bg-[#F0F4F0]/70 rounded-3xl text-sm text-[#5C6B5E] font-light">
+                  💡 <strong>Importante:</strong> este encontro não substitui um processo
+                  terapêutico contínuo — ele revela se esse caminho faz sentido agora.
+                </div>
+              </div>
+            </motion.div>
+
+          </div>
+        </div>
+      </section>
+
       {/* Seção Contato */}
       <section id='contato' className="py-32 md:py-48 px-6 text-center">
         <div className="max-w-4xl mx-auto">
@@ -427,7 +493,6 @@ const Home: FC = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
           >
-            <span className="text-xs tracking-[0.4em] text-[#A3B18A] uppercase mb-8 block font-medium">Início</span>
             <h2 className="font-serif text-5xl md:text-7xl text-[#2D362E] mb-10 leading-tight">
               Vamos despertar sua <br /><span className="italic text-[#5C6B5E]">melhor frequência?</span>
             </h2>
