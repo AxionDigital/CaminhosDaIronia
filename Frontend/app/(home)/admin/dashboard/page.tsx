@@ -10,9 +10,17 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import LoadingOverlay from '@/app/components/Loading';
 import Toast from '@/app/components/Toast';
+import { ComponentType } from 'react';
+
+interface StatCardProps {
+  title: string;
+  value: string;
+  trend: string;
+  icon: ComponentType<{ className?: string }>;
+}
 
 export default function AdminDashboard() {
-  
+
   // NAVEGAÇÃO
   const router = useRouter();
   const [activeTab, setActiveTab] = useState('dashboard');
@@ -158,9 +166,26 @@ export default function AdminDashboard() {
             >
               {/* Stats */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <StatCard title="Solicitações Grátis" value="14" icon={<Gift className="text-amber-500" />} trend="+3 novos" />
-                <StatCard title="Agendamentos Pagos" value="8" icon={<CreditCard className="text-[#A3B18A]" />} trend="+1 hoje" />
-                <StatCard title="Total Faturado" value="R$ 2.450" icon={<Check className="text-blue-500" />} trend="Este mês" />
+                <StatCard
+                  title="Solicitações Grátis"
+                  value="14"
+                  icon={Gift}
+                  trend="+3 novos"
+                />
+
+                <StatCard
+                  title="Agendamentos Pagos"
+                  value="8"
+                  icon={CreditCard}
+                  trend="+1 hoje"
+                />
+
+                <StatCard
+                  title="Total Faturado"
+                  value="R$ 2.450"
+                  icon={Check}
+                  trend="Este mês"
+                />
               </div>
 
               {/* Recent Activity Split */}
@@ -265,16 +290,20 @@ export default function AdminDashboard() {
 
 /* ---------------- COMPONENTES AUXILIARES ---------------- */
 
-function StatCard({ title, value, icon, trend }: any) {
+function StatCard({ title, value, icon: Icon, trend }: StatCardProps) {
   return (
     <div className="p-8 bg-white rounded-[2.5rem] border border-[#E2E8F0] shadow-sm hover:shadow-md transition-all group">
       <div className="flex justify-between items-start mb-4">
         <div className="p-3 bg-[#F8F9F5] rounded-2xl group-hover:scale-110 transition-transform">
-          {React.cloneElement(icon as React.ReactElement, { className: 'w-6 h-6' })}
+          <Icon className="w-6 h-6" />
         </div>
-        <span className="text-[10px] font-bold text-[#A3B18A] uppercase tracking-widest">{trend}</span>
+        <span className="text-[10px] font-bold text-[#A3B18A] uppercase tracking-widest">
+          {trend}
+        </span>
       </div>
-      <p className="text-xs text-[#5C6B5E] uppercase tracking-wider font-medium mb-1">{title}</p>
+      <p className="text-xs text-[#5C6B5E] uppercase tracking-wider font-medium mb-1">
+        {title}
+      </p>
       <p className="font-serif text-4xl text-[#2D362E]">{value}</p>
     </div>
   );
