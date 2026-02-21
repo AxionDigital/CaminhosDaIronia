@@ -6,6 +6,9 @@ const cookieParser = require("cookie-parser");
 const connectDB = require("./src/config/bd");
 
 const authRoutes = require("./src/routes/authRoutes");
+const solicitacaoRoutes = require("./src/routes/solicitacaoRoutes");
+const feedbackRoutes = require("./src/routes/feedbackRoutes");
+
 
 connectDB();
 
@@ -20,6 +23,8 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use("/api", authRoutes);
+app.use("/api", solicitacaoRoutes);
+app.use("/api/feedback", feedbackRoutes);
 
 const PORT = process.env.PORT || 3005;
 app.listen(PORT, () =>

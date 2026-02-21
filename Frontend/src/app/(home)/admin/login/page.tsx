@@ -1,6 +1,6 @@
 'use client'
 
-import LoadingOverlay from '@/app/components/Loading';
+import LoadingOverlay from '@/src/app/components/Loading';
 import { motion } from 'framer-motion'
 import { Lock, Mail, ArrowRight } from 'lucide-react'
 import { useRouter } from 'next/navigation';
@@ -48,15 +48,16 @@ export default function AdminLogin() {
 
   return (
     <main className="min-h-screen bg-[#F8F9F5] flex items-center justify-center px-6">
+
+      {/* Loading */}
+      <LoadingOverlay show={loading} message="Autenticando..." />
+
       <motion.div
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
         className="w-full max-w-md bg-white/70 backdrop-blur border border-[#E2E8F0] rounded-[3rem] shadow-2xl p-12"
       >
-
-        {/* Loading */}
-        <LoadingOverlay show={loading} message="Autenticando..." />
 
         {/* Cabeçalho */}
         <div className="text-center mb-12">

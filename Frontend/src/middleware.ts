@@ -8,6 +8,8 @@ export function middleware(req: NextRequest) {
   const isAdminRoute = pathname.startsWith("/admin");
   const isLoginPage = pathname === "/admin/login";
 
+  console.log(token);
+
   // ❌ Não logado tentando acessar área admin
   if (isAdminRoute && !token && !isLoginPage) {
     return NextResponse.redirect(new URL("/admin/login", req.url));
@@ -22,5 +24,5 @@ export function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*"],
+  matcher: ["/admin/:path*"]
 };

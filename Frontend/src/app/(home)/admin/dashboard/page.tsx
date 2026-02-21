@@ -8,9 +8,10 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
-import LoadingOverlay from '@/app/components/Loading';
-import Toast from '@/app/components/Toast';
+import LoadingOverlay from '@/src/app/components/Loading';
+import Toast from '@/src/app/components/Toast';
 import { ComponentType } from 'react';
+import FeedbackModal from '@/src/app/components/FeedbackModal';
 
 interface StatCardProps {
   title: string;
@@ -19,7 +20,21 @@ interface StatCardProps {
   icon: ComponentType<{ className?: string }>;
 }
 
+type Solicitacao = {
+  _id: string;
+  nome: string;
+  nascimento: string;
+  whatsapp: string;
+  tema: string;
+  mensagem: string;
+  status: string;
+  createdAt: string;
+};
+
 export default function AdminDashboard() {
+
+  // URL
+  const API = process.env.NEXT_PUBLIC_API_URL;
 
   // NAVEGAÇÃO
   const router = useRouter();
@@ -31,9 +46,55 @@ export default function AdminDashboard() {
   const [error, setError] = useState<string | null>(null);
   const [toast, setToast] = useState<{ message: string; type?: "success" | "error" } | null>(null);
 
+  // MODAL FEEDBACK
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedClient, setSelectedClient] = useState<any>(null);
+
+  const abrirFeedback = (cliente: any) => {
+    setSelectedClient(cliente);
+    setModalOpen(true);
+  };
+
   // FECTH
+  const [solicitacoes, setSolicitacoes] = useState<Solicitacao[]>([]);
+  const [feedbacks, setFeedbacks] = useState<any[]>([]);
+
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+
+      const res = await fetch(`/api/solicitacao`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+
+      const res2 = await fetch(`/api/feedback`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+
+      const data2 = await res2.json();
+      setFeedbacks(data2);
+
+      if (!res.ok) throw new Error("Erro ao buscar solicitações");
+
+      const data = await res.json();
+      setSolicitacoes(data);
+
+    } catch (err: any) {
+      console.error(err);
+      showToast("Erro ao carregar solicitações", "error");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    setLoading(false);
+    fetchData();
   }, []);
 
   // FEEDBACK - TOAST
@@ -65,6 +126,47 @@ export default function AdminDashboard() {
     }
   };
 
+  // ATUALIZAR STATUS - SOLICITAÇÃO GRATIS
+  const atualizarStatus = async (id: string, status: "aprovado" | "recusado") => {
+    try {
+      const res = await fetch(`/api/solicitacao/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status }),
+      });
+
+      if (!res.ok) throw new Error();
+
+      setSolicitacoes(prev =>
+        prev.map(s => s._id === id ? { ...s, status } : s)
+      );
+
+      showToast(`Solicitação ${status}!`);
+
+    } catch {
+      showToast("Erro ao atualizar status", "error");
+    }
+  };
+
+  const getFeedbackToken = (solicitacaoId: string) => {
+    const fb = feedbacks.find(f => f.solicitacaoId === solicitacaoId);
+    return fb?.token;
+  };
+
+  // FORMARTAR TEMPO
+  const ultimos = solicitacoes.slice(0, 2);
+
+  const formatarTempo = (data: string) => {
+    const diff = Date.now() - new Date(data).getTime();
+    const horas = Math.floor(diff / 1000 / 60 / 60);
+
+    if (horas < 1) return "Agora";
+    if (horas < 24) return `Há ${horas}h`;
+
+    const dias = Math.floor(horas / 24);
+    return `Há ${dias}d`;
+  };
+
   const menuItems = [
     { id: 'dashboard', label: 'Visão Geral', icon: <LayoutDashboard className="w-5 h-5" /> },
     { id: 'gratuitos', label: 'Solicitações Grátis', icon: <Gift className="w-5 h-5" /> },
@@ -73,7 +175,7 @@ export default function AdminDashboard() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#F8F9F5] flex text-[#2D362E]">
+    <div className="min-h-screen bg-[#F8F9F5] flex text-[#2D362E] overflow-hidden">
 
       {/* Loading */}
       <LoadingOverlay show={loading} message="Autenticando..." />
@@ -81,6 +183,41 @@ export default function AdminDashboard() {
       {/* Toast */}
       {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
 
+      {/* Modal Feedback */}
+      <FeedbackModal
+        open={modalOpen}
+        client={selectedClient}
+        onClose={() => setModalOpen(false)}
+        onSave={async (data) => {
+          try {
+            const res = await fetch(`/api/feedback`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                solicitacaoId: selectedClient.id,
+                hz: data.hz,
+                nivel: data.nivel,
+                mental: data.mental,
+                emocional: data.emocional,
+                energetico: data.energetico,
+                espiritual: data.espiritual,
+                mensagem: data.mensagem,
+                nome: selectedClient.name,
+                telefone: selectedClient.phone,
+              })
+            });
+
+            if (!res.ok) throw new Error();
+
+            showToast("Feedback enviado com sucesso!");
+            setModalOpen(false);
+            fetchData();
+
+          } catch {
+            showToast("Erro ao enviar feedback", "error");
+          }
+        }}
+      />
 
       {/* Sidebar */}
       <aside
@@ -94,9 +231,6 @@ export default function AdminDashboard() {
               animate={{ opacity: 1 }}
               className="flex items-center gap-3"
             >
-              <div className="w-8 h-8 bg-[#A3B18A] rounded-lg flex items-center justify-center text-white">
-                <Sparkles className="w-5 h-5" />
-              </div>
               <span className="font-serif font-bold text-xl">Admin</span>
             </motion.div>
           )};
@@ -168,7 +302,7 @@ export default function AdminDashboard() {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <StatCard
                   title="Solicitações Grátis"
-                  value="14"
+                  value={solicitacoes.length.toString()}
                   icon={Gift}
                   trend="+3 novos"
                 />
@@ -196,8 +330,18 @@ export default function AdminDashboard() {
                     <button onClick={() => setActiveTab('gratuitos')} className="text-xs text-[#A3B18A] font-bold uppercase tracking-widest hover:underline">Ver todas</button>
                   </div>
                   <div className="space-y-4">
-                    <SimpleRequestCard name="Ana Clara" theme="Emocional" time="Há 2h" />
-                    <SimpleRequestCard name="Lucas Lima" theme="Espiritual" time="Há 5h" />
+                    {ultimos.length === 0 && (
+                      <p className="text-sm text-[#5C6B5E]">Nenhuma solicitação ainda.</p>
+                    )}
+
+                    {ultimos.map((s) => (
+                      <SimpleRequestCard
+                        key={s._id}
+                        name={s.nome}
+                        theme={s.tema}
+                        time={formatarTempo(s.createdAt)}
+                      />
+                    ))}
                   </div>
                 </section>
                 <section>
@@ -232,22 +376,22 @@ export default function AdminDashboard() {
               </div>
 
               <div className="space-y-6">
-                <FullRequestCard
-                  name="Maria Silva"
-                  date="12/03/1989"
-                  phone="(17) 99786-0845"
-                  theme="Relacionamento"
-                  message="Sinto minha vibração baixa e confusa ultimamente."
-                  type="Gratuito"
-                />
-                <FullRequestCard
-                  name="João Pereira"
-                  date="05/07/1982"
-                  phone="(11) 98877-6655"
-                  theme="Carreira"
-                  message="Busco clareza sobre novos caminhos profissionais."
-                  type="Gratuito"
-                />
+                {solicitacoes.map((s) => (
+                  <FullRequestCard
+                    key={s._id}
+                    id={s._id}
+                    token={getFeedbackToken(s._id)}
+                    name={s.nome}
+                    date={s.nascimento}
+                    phone={s.whatsapp}
+                    theme={s.tema}
+                    message={s.mensagem}
+                    type="Gratuito"
+                    status={s.status}
+                    onAction={atualizarStatus}
+                    onFeedback={abrirFeedback}
+                  />
+                ))}
               </div>
             </motion.div>
           )}
@@ -326,7 +470,7 @@ function SimpleRequestCard({ name, theme, time, isPaid }: any) {
   );
 }
 
-function FullRequestCard({ name, date, phone, theme, message, type, isConfirmed }: any) {
+function FullRequestCard({ id, token, name, date, phone, theme, message, type, status, onAction, onFeedback }: any) {
   return (
     <div className="p-8 bg-white border border-[#E2E8F0] rounded-[2.5rem] shadow-sm hover:shadow-lg transition-all duration-500">
       <div className="grid lg:grid-cols-12 gap-8 items-center">
@@ -355,20 +499,50 @@ function FullRequestCard({ name, date, phone, theme, message, type, isConfirmed 
         </div>
 
         <div className="lg:col-span-3 flex flex-row lg:flex-col gap-3">
-          {isConfirmed ? (
-            <button className="w-full py-4 bg-[#F8F9F5] text-[#4A5D4E] rounded-2xl text-[10px] font-bold uppercase tracking-widest border border-[#E2E8F0]">
-              Ver Detalhes
-            </button>
-          ) : (
+
+          {status === "pendente" && (
             <>
-              <button className="flex-1 py-4 bg-[#4A5D4E] text-white rounded-2xl text-[10px] font-bold uppercase tracking-widest hover:bg-[#3a4a3e] transition-all">
+              <button
+                onClick={() => onAction(id, "aprovado")}
+                className="flex-1 py-4 bg-[#4A5D4E] text-white rounded-2xl text-[10px] font-bold uppercase tracking-widest hover:bg-[#3a4a3e]"
+              >
                 Aceitar
               </button>
-              <button className="flex-1 py-4 bg-white border border-red-100 text-red-400 rounded-2xl text-[10px] font-bold uppercase tracking-widest hover:bg-red-50 transition-all">
+
+              <button
+                onClick={() => onAction(id, "recusado")}
+                className="flex-1 py-4 bg-white border border-red-100 text-red-400 rounded-2xl text-[10px] font-bold uppercase tracking-widest hover:bg-red-50"
+              >
                 Recusar
               </button>
             </>
           )}
+
+          {status === "aprovado" && (
+            <button
+              onClick={() => onFeedback({ id, name, phone })}
+              className="flex-1 py-4 bg-[#A3B18A] text-white rounded-2xl text-[10px] font-bold uppercase tracking-widest hover:opacity-90"
+            >
+              Dar devolutiva
+            </button>
+          )}
+
+          {status === "devolvido" && (
+            <a
+              href={`/area-cliente/${token}`}
+              target="_blank"
+              className="flex-1 py-4 bg-blue-600 text-white text-center rounded-2xl text-[10px] font-bold uppercase tracking-widest hover:bg-blue-700"
+            >
+              Abrir link
+            </a>
+          )}
+
+          {status === "recusado" && (
+            <div className="w-full py-4 text-center rounded-2xl text-[10px] font-bold uppercase tracking-widest bg-red-50 border text-red-400">
+              Recusado
+            </div>
+          )}
+
         </div>
       </div>
     </div>
