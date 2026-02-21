@@ -10,7 +10,7 @@ function getIdFromRequest(req: NextRequest): string | null {
   return id && id !== "[id]" ? id : null;
 }
 
-export async function PACTH(req: NextRequest) {
+export async function PATCH(req: NextRequest) {
   try {
     const token = (await cookies()).get("token")?.value;
     const API = process.env.NEXT_PUBLIC_API_URL;
