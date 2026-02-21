@@ -9,7 +9,6 @@ const authRoutes = require("./src/routes/authRoutes");
 const solicitacaoRoutes = require("./src/routes/solicitacaoRoutes");
 const feedbackRoutes = require("./src/routes/feedbackRoutes");
 
-
 connectDB();
 
 const app = express()
