@@ -6,7 +6,8 @@ import {
   Clock, Filter, Search, ChevronRight, LayoutDashboard,
   Gift, CreditCard, Settings, Menu, Bell,
   Camera,
-  UserPlus
+  UserPlus,
+  Edit2
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
@@ -82,9 +83,16 @@ export default function AdminDashboard() {
   // MODAL FEEDBACK
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedClient, setSelectedClient] = useState<any>(null);
+  const [selectedFeedback, setSelectedFeedback] = useState<any>(null); // NOVO
 
   const abrirFeedback = (cliente: any) => {
+    // Procurar feedback existente para este cliente
+    const feedbackExistente = feedbacks.find(
+      f => f.solicitacaoId === cliente.id
+    );
+
     setSelectedClient(cliente);
+    setSelectedFeedback(feedbackExistente || null); // NOVO
     setModalOpen(true);
   };
 
@@ -94,8 +102,8 @@ export default function AdminDashboard() {
 
   const fetchData = useCallback(async () => {
     try {
-      setLoading(true);      
-      
+      setLoading(true);
+
       const res = await fetch(`/api/solicitacao`, {
         method: 'POST',
         headers: {
@@ -127,7 +135,7 @@ export default function AdminDashboard() {
     }
   }, [searchTerm]);
 
-  useEffect(() => {    
+  useEffect(() => {
     fetchData();
   }, [fetchData]);
 
@@ -187,6 +195,46 @@ export default function AdminDashboard() {
     return fb?.token;
   };
 
+  const criarFeedback = async (data: any) => {
+    const res = await fetch(`/api/feedback`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        solicitacaoId: selectedClient.id,
+        hz: data.hz,
+        nivel: data.nivel,
+        mental: data.mental,
+        emocional: data.emocional,
+        energetico: data.energetico,
+        espiritual: data.espiritual,
+        mensagem: data.mensagem,
+        nome: selectedClient.name,
+        telefone: selectedClient.phone,
+      }),
+    });
+
+    if (!res.ok) throw new Error("Erro ao criar feedback");
+  };
+
+  const atualizarFeedback = async (feedbackId: string, data: any) => {
+    const res = await fetch(`/api/feedback/${feedbackId}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        hz: data.hz,
+        nivel: data.nivel,
+        mental: data.mental,
+        emocional: data.emocional,
+        energetico: data.energetico,
+        espiritual: data.espiritual,
+        mensagem: data.mensagem,
+        status: "concluido",
+      }),
+    });
+
+    if (!res.ok) throw new Error("Erro ao atualizar feedback");
+  };
+
   // FORMARTAR TEMPO
   const ultimos = solicitacoes.slice(0, 2);
 
@@ -221,34 +269,33 @@ export default function AdminDashboard() {
       <FeedbackModal
         open={modalOpen}
         client={selectedClient}
-        onClose={() => setModalOpen(false)}
+        feedback={selectedFeedback} // NOVO
+        onClose={() => {
+          setModalOpen(false);
+          setSelectedClient(null);
+          setSelectedFeedback(null); // NOVO
+        }}
         onSave={async (data) => {
           try {
-            const res = await fetch(`/api/feedback`, {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                solicitacaoId: selectedClient.id,
-                hz: data.hz,
-                nivel: data.nivel,
-                mental: data.mental,
-                emocional: data.emocional,
-                energetico: data.energetico,
-                espiritual: data.espiritual,
-                mensagem: data.mensagem,
-                nome: selectedClient.name,
-                telefone: selectedClient.phone,
-              })
-            });
+            const feedbackExistente = feedbacks.find(
+              f => f.solicitacaoId === selectedClient.id
+            );
 
-            if (!res.ok) throw new Error();
+            if (feedbackExistente) {
+              await atualizarFeedback(feedbackExistente._id, data);
+              showToast("Feedback atualizado com sucesso!");
+            } else {
+              await criarFeedback(data);
+              showToast("Feedback enviado com sucesso!");
+            }
 
-            showToast("Feedback enviado com sucesso!");
             setModalOpen(false);
+            setSelectedClient(null);
+            setSelectedFeedback(null); // NOVO
             fetchData();
 
           } catch {
-            showToast("Erro ao enviar feedback", "error");
+            showToast("Erro ao salvar feedback", "error");
           }
         }}
       />
@@ -609,7 +656,7 @@ function FullRequestCard({ id, token, name, date, phone, theme, message, type, s
 
         <div className="lg:col-span-5 bg-[#F8F9F5] p-6 rounded-2xl border border-[#E2E8F0]/50">
           <p className="text-[10px] font-bold uppercase tracking-widest text-[#A3B18A] mb-2">Tema: {theme}</p>
-          <p className="italic text-sm text-[#5C6B5E]">“{message}”</p>
+          <p className="italic text-sm text-[#5C6B5E]">"{message}"</p>
         </div>
 
         <div className="lg:col-span-3 flex flex-row lg:flex-col gap-3">
@@ -618,14 +665,14 @@ function FullRequestCard({ id, token, name, date, phone, theme, message, type, s
             <>
               <button
                 onClick={() => onAction(id, "aprovado")}
-                className="flex-1 py-4 bg-[#4A5D4E] text-white rounded-2xl text-[10px] font-bold uppercase tracking-widest hover:bg-[#3a4a3e]"
+                className="flex-1 py-4 bg-[#4A5D4E] text-white rounded-2xl text-[10px] font-bold uppercase tracking-widest hover:bg-[#3a4a3e] transition-all"
               >
                 Aceitar
               </button>
 
               <button
                 onClick={() => onAction(id, "recusado")}
-                className="flex-1 py-4 bg-white border border-red-100 text-red-400 rounded-2xl text-[10px] font-bold uppercase tracking-widest hover:bg-red-50"
+                className="flex-1 py-4 bg-white border border-red-100 text-red-400 rounded-2xl text-[10px] font-bold uppercase tracking-widest hover:bg-red-50 transition-all"
               >
                 Recusar
               </button>
@@ -635,20 +682,29 @@ function FullRequestCard({ id, token, name, date, phone, theme, message, type, s
           {status === "aprovado" && (
             <button
               onClick={() => onFeedback({ id, name, phone })}
-              className="flex-1 py-4 bg-[#A3B18A] text-white rounded-2xl text-[10px] font-bold uppercase tracking-widest hover:opacity-90"
+              className="flex-1 py-4 bg-[#A3B18A] text-white rounded-2xl text-[10px] font-bold uppercase tracking-widest hover:opacity-90 transition-all"
             >
               Dar devolutiva
             </button>
           )}
 
           {status === "devolvido" && (
-            <a
-              href={`/area-cliente/${token}`}
-              target="_blank"
-              className="flex-1 py-4 bg-blue-600 text-white text-center rounded-2xl text-[10px] font-bold uppercase tracking-widest hover:bg-blue-700"
-            >
-              Abrir link
-            </a>
+            <div className="flex flex-col md:flex-col gap-3 w-full">
+              <a
+                href={`/area-cliente/${token}`}
+                target="_blank"
+                className="flex-1 w-full py-4 bg-blue-600 text-white text-center rounded-2xl text-[10px] font-bold uppercase tracking-widest hover:bg-blue-700 transition-all  items-center justify-center gap-2"
+              >
+                Abrir link
+              </a>
+              <button
+                onClick={() => onFeedback({ id, name, phone })}
+                className="flex-1 w-full py-4 bg-[#4A5D4E] text-white rounded-2xl text-[10px] font-bold uppercase tracking-widest hover:bg-[#3a4a3e] transition-all flex items-center justify-center gap-2"
+              >
+                <Edit2 size={14} />
+                Editar
+              </button>
+            </div>
           )}
 
           {status === "recusado" && (
@@ -685,7 +741,7 @@ function ProfileMenuItem({ icon, label, onClick, variant = 'default' }: any) {
       onClick={onClick}
       className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all ${variant === 'danger'
         ? 'text-red-500 hover:bg-red-50'
-        : 'text-[#5C6B5E] hover:bg-[#F8F9F5] hover:text-[#2D362E]'
+        : 'text-[#07d322] hover:bg-[#F8F9F5] hover:text-[#2D362E]'
         }`}
     >
       <span className={variant === 'danger' ? 'text-red-400' : 'text-[#A3B18A]'}>{icon}</span>
