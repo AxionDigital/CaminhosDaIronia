@@ -1,10 +1,12 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   Check, X, Calendar, User, Phone, Sparkles, LogOut,
   Clock, Filter, Search, ChevronRight, LayoutDashboard,
-  Gift, CreditCard, Settings, Menu, Bell
+  Gift, CreditCard, Settings, Menu, Bell,
+  Camera,
+  UserPlus
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
@@ -50,6 +52,32 @@ export default function AdminDashboard() {
 
   // FILTRO
   const [searchTerm, setSearchTerm] = useState('');
+
+  // ESTADOS DOS MODAIS
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [showProfileMenu, setShowProfileMenu] = useState(false);
+  const [selectedRequest, setSelectedRequest] = useState<any>(null);
+
+  // REFS PARA FECHAR AO CLICAR FORA
+  const notificationRef = useRef<HTMLDivElement>(null);
+  const profileRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setLoading(false);
+
+    // Fechar modais ao clicar fora
+    const handleClickOutside = (event: MouseEvent) => {
+      if (notificationRef.current && !notificationRef.current.contains(event.target as Node)) {
+        setShowNotifications(false);
+      }
+      if (profileRef.current && !profileRef.current.contains(event.target as Node)) {
+        setShowProfileMenu(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   // MODAL FEEDBACK
   const [modalOpen, setModalOpen] = useState(false);
@@ -281,16 +309,99 @@ export default function AdminDashboard() {
         <header className="flex justify-between items-center mb-12">
           <div>
             <h1 className="font-serif mt-5 text-3xl md:text-4xl">
-              {menuItems.find(i => i.id === activeTab)?.label}
+              {selectedRequest ? `Feedback: ${selectedRequest.name}` : menuItems.find(i => i.id === activeTab)?.label}
             </h1>
             <p className="text-[#5C6B5E] text-sm mt-1">Bem-vindo de volta ao seu painel de controle.</p>
           </div>
-          <div className="flex items-center mb-5 gap-4">
-            <button className="p-3 bg-white border border-[#E2E8F0] rounded-full hover:shadow-sm transition-all relative">
-              <Bell className="w-5 h-5 text-[#5C6B5E]" />
-              <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
-            </button>
-            <div className="w-10 h-10 bg-[#4A5D4E] rounded-full border-2 border-white shadow-sm"></div>
+
+          <div className="flex items-center mb-5 gap-4 relative">
+
+            {/* Botão de Notificações */}
+            <div ref={notificationRef} className="relative">
+              <button
+                onClick={() => setShowNotifications(!showNotifications)}
+                className="p-3 bg-white border border-[#E2E8F0] rounded-full hover:shadow-sm transition-all relative"
+              >
+                <Bell className="w-5 h-5 text-[#5C6B5E]" />
+                <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
+              </button>
+
+              <AnimatePresence>
+                {showNotifications && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                    className="absolute right-0 mt-4 w-80 bg-white rounded-[2rem] border border-[#E2E8F0] shadow-xl z-[60] overflow-hidden"
+                  >
+                    <div className="p-6 border-b border-[#F8F9F5] flex justify-between items-center">
+                      <h3 className="font-serif text-lg">Notificações</h3>
+                      <span className="text-[10px] font-bold text-[#A3B18A] uppercase tracking-widest">2 Novas</span>
+                    </div>
+                    <div className="max-h-96 overflow-y-auto">
+                      <NotificationItem
+                        title="Nova Solicitação"
+                        desc="Maria Silva enviou um pedido de espelhamento."
+                        time="Há 5 min"
+                        icon={<Gift className="w-4 h-4 text-amber-500" />}
+                      />
+                      <NotificationItem
+                        title="Agendamento Confirmado"
+                        desc="Ricardo Oliveira confirmou o horário das 15h."
+                        time="Há 1h"
+                        icon={<Check className="w-4 h-4 text-[#A3B18A]" />}
+                      />
+                    </div>
+                    <button className="w-full py-4 bg-[#F8F9F5] text-[10px] font-bold uppercase tracking-[0.2em] text-[#5C6B5E] hover:bg-[#E2E8F0] transition-colors">
+                      Ver todas as atividades
+                    </button>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
+            {/* Botão de Perfil */}
+            <div ref={profileRef} className="relative">
+              <button
+                onClick={() => setShowProfileMenu(!showProfileMenu)}
+                className="w-10 h-10 bg-[#4A5D4E] rounded-full border-2 border-white shadow-sm cursor-pointer hover:scale-105 transition-transform overflow-hidden"
+              >
+                <img src="https://ui-avatars.com/api/?name=Admin&background=4A5D4E&color=fff" alt="Profile" className="w-full h-full object-cover" />
+              </button>
+
+              <AnimatePresence>
+                {showProfileMenu && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                    className="absolute right-0 mt-4 w-64 bg-white rounded-[2rem] border border-[#E2E8F0] shadow-xl z-[60] overflow-hidden"
+                  >
+                    <div className="p-6 bg-[#F8F9F5] border-b border-[#E2E8F0]/50 text-center">
+                      <div className="w-16 h-16 bg-[#4A5D4E] rounded-full border-4 border-white shadow-sm mx-auto mb-3 overflow-hidden">
+                        <img src="https://ui-avatars.com/api/?name=Admin&background=4A5D4E&color=fff" alt="Profile" className="w-full h-full object-cover" />
+                      </div>
+                      <h3 className="font-serif text-lg text-[#2D362E]">Administrador</h3>
+                      <p className="text-[10px] text-[#5C6B5E] uppercase tracking-widest">Painel de Controle</p>
+                    </div>
+                    <div className="p-2">
+                      <ProfileMenuItem
+                        icon={<Camera className="w-4 h-4" />}
+                        label="Trocar Foto"
+                        onClick={() => showToast("Funcionalidade de upload em breve!")}
+                      />
+                      <ProfileMenuItem
+                        icon={<UserPlus className="w-4 h-4" />}
+                        label="Mudar de Conta"
+                        onClick={handleLogout}
+                        variant="danger"
+                      />
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
           </div>
         </header>
 
@@ -552,3 +663,38 @@ function FullRequestCard({ id, token, name, date, phone, theme, message, type, s
     </div>
   );
 }
+
+function NotificationItem({ title, desc, time, icon }: any) {
+  return (
+    <div className="p-5 hover:bg-[#F8F9F5] transition-colors border-b border-[#F8F9F5] last:border-0 cursor-pointer group">
+      <div className="flex gap-4">
+        <div className="mt-1 p-2 bg-white rounded-xl border border-[#E2E8F0] group-hover:border-[#A3B18A]/30 transition-colors">
+          {icon}
+        </div>
+        <div className="flex-1">
+          <div className="flex justify-between items-start mb-1">
+            <h4 className="text-sm font-bold text-[#2D362E]">{title}</h4>
+            <span className="text-[9px] text-[#5C6B5E]/50 uppercase font-bold">{time}</span>
+          </div>
+          <p className="text-xs text-[#5C6B5E] leading-relaxed">{desc}</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ProfileMenuItem({ icon, label, onClick, variant = 'default' }: any) {
+  return (
+    <button
+      onClick={onClick}
+      className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all ${variant === 'danger'
+        ? 'text-red-500 hover:bg-red-50'
+        : 'text-[#5C6B5E] hover:bg-[#F8F9F5] hover:text-[#2D362E]'
+        }`}
+    >
+      <span className={variant === 'danger' ? 'text-red-400' : 'text-[#A3B18A]'}>{icon}</span>
+      {label}
+    </button>
+  );
+}
+

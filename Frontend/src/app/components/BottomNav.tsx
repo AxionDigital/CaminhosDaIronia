@@ -30,7 +30,7 @@ export default function BottomNav({ activeTab, setActiveTab }: Props) {
               onClick={() => setActiveTab(item.id)}
               className="relative flex flex-col items-center gap-1 group"
             >
-              <div className={`p-2 rounded-xl transition-all duration-300 ${
+              <div className={`p-1 rounded-xl transition-all duration-300 ${
                 isActive ? 'text-[#A3B18A]' : 'text-[#5C6B5E]'
               }`}>
                 <Icon className={`w-6 h-6 ${isActive ? 'fill-[#A3B18A]/10' : ''}`} />
@@ -45,7 +45,7 @@ export default function BottomNav({ activeTab, setActiveTab }: Props) {
               {isActive && (
                 <motion.div
                   layoutId="activeTab"
-                  className="absolute -top-3 w-1 h-1 bg-[#A3B18A] rounded-full"
+                  className="absolute -top-1 w-1 h-1 bg-[#A3B18A] rounded-full"
                   transition={{ type: "spring", stiffness: 380, damping: 30 }}
                 />
               )}
