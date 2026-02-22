@@ -10,8 +10,24 @@ exports.criar = async (req, res) => {
 };
 
 exports.listar = async (req, res) => {
-  const dados = await Solicitacao.find().sort({ createdAt: -1 });
-  res.json(dados);
+  try {
+    const { nome } = req.query;
+
+    const filtro = {};
+
+    if (nome) {
+      filtro.nome = { $regex: nome, $options: "i" };
+    }
+
+    const dados = await Solicitacao
+      .find(filtro)
+      .sort({ createdAt: -1 });
+
+    res.json(dados);
+
+  } catch (err) {
+    res.status(500).json({ message: "Erro ao listar solicitações" });
+  }
 };
 
 exports.atualizarStatus = async (req, res) => {

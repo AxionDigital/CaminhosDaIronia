@@ -1,17 +1,20 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 
-export async function GET() {
+export async function POST(req: NextRequest, res: NextResponse) {
   try {
     const cookieStore = await cookies();
     const token = cookieStore.get("token")?.value;
     const API = process.env.NEXT_PUBLIC_API_URL;
 
+    const body = await req.json();
+    const searchTerm = body.searchTerm || "";
+    
     if (!token) {
       return NextResponse.json({ message: "Não autorizado" }, { status: 401 });
     }
 
-    const r = await fetch(`${API}/api/solicitacoes`, {
+    const r = await fetch(`${API}/api/solicitacoes?nome=${searchTerm}`, {
       headers: { Cookie: `token=${token}` },
       credentials: "include",
     });

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
   Check, X, Calendar, User, Phone, Sparkles, LogOut,
   Clock, Filter, Search, ChevronRight, LayoutDashboard,
@@ -92,15 +92,16 @@ export default function AdminDashboard() {
   const [solicitacoes, setSolicitacoes] = useState<Solicitacao[]>([]);
   const [feedbacks, setFeedbacks] = useState<any[]>([]);
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     try {
-      setLoading(true);
-
+      setLoading(true);      
+      
       const res = await fetch(`/api/solicitacao`, {
-        method: 'GET',
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json'
-        }
+        },
+        body: JSON.stringify({ searchTerm })
       });
 
       const res2 = await fetch(`/api/feedback`, {
@@ -124,11 +125,11 @@ export default function AdminDashboard() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [searchTerm]);
 
-  useEffect(() => {
+  useEffect(() => {    
     fetchData();
-  }, []);
+  }, [fetchData]);
 
   // FEEDBACK - TOAST
   const showToast = (message: string, type: "success" | "error" = "success") => {
@@ -320,7 +321,7 @@ export default function AdminDashboard() {
             <div ref={notificationRef} className="relative">
               <button
                 onClick={() => setShowNotifications(!showNotifications)}
-                className="p-3 bg-white border border-[#E2E8F0] rounded-full hover:shadow-sm transition-all relative"
+                className="p-2 bg-white border border-[#E2E8F0] rounded-full hover:shadow-sm transition-all relative"
               >
                 <Bell className="w-5 h-5 text-[#5C6B5E]" />
                 <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
