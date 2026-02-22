@@ -332,24 +332,22 @@ export default function AdminDashboard() {
                     initial={{ opacity: 0, y: 10, scale: 0.95 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                    className="absolute right-0 mt-4 w-80 bg-white rounded-[2rem] border border-[#E2E8F0] shadow-xl z-[60] overflow-hidden"
+                    className="absolute right-0 mt-4 w-60 bg-white rounded-[2rem] border border-[#E2E8F0] shadow-xl z-[60] overflow-hidden"
                   >
                     <div className="p-6 border-b border-[#F8F9F5] flex justify-between items-center">
                       <h3 className="font-serif text-lg">Notificações</h3>
                       <span className="text-[10px] font-bold text-[#A3B18A] uppercase tracking-widest">2 Novas</span>
                     </div>
-                    <div className="max-h-96 overflow-y-auto">
+                    <div className="max-h-65 overflow-y-auto">
                       <NotificationItem
                         title="Nova Solicitação"
                         desc="Maria Silva enviou um pedido de espelhamento."
                         time="Há 5 min"
-                        icon={<Gift className="w-4 h-4 text-amber-500" />}
                       />
                       <NotificationItem
                         title="Agendamento Confirmado"
                         desc="Ricardo Oliveira confirmou o horário das 15h."
                         time="Há 1h"
-                        icon={<Check className="w-4 h-4 text-[#A3B18A]" />}
                       />
                     </div>
                     <button className="w-full py-4 bg-[#F8F9F5] text-[10px] font-bold uppercase tracking-[0.2em] text-[#5C6B5E] hover:bg-[#E2E8F0] transition-colors">
@@ -668,9 +666,6 @@ function NotificationItem({ title, desc, time, icon }: any) {
   return (
     <div className="p-5 hover:bg-[#F8F9F5] transition-colors border-b border-[#F8F9F5] last:border-0 cursor-pointer group">
       <div className="flex gap-4">
-        <div className="mt-1 p-2 bg-white rounded-xl border border-[#E2E8F0] group-hover:border-[#A3B18A]/30 transition-colors">
-          {icon}
-        </div>
         <div className="flex-1">
           <div className="flex justify-between items-start mb-1">
             <h4 className="text-sm font-bold text-[#2D362E]">{title}</h4>
