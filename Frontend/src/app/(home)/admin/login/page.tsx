@@ -73,7 +73,7 @@ export default function AdminLogin() {
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
-        className="w-full max-w-md bg-white/70 backdrop-blur border border-[#E2E8F0] rounded-[3rem] shadow-2xl p-12"
+        className="w-full max-w-md md:bg-white/70 backdrop-blur md:border border-[#E2E8F0] rounded-[3rem] md:shadow-2xl p-2 md:p-12"
       >
 
         {/* Cabeçalho */}
