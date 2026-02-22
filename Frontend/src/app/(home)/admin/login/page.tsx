@@ -1,13 +1,21 @@
 'use client'
 
-import LoadingOverlay from '@/src/app/components/Loading';
-import { motion } from 'framer-motion'
-import { Lock, Mail, ArrowRight } from 'lucide-react'
+// HOOKS
 import { useRouter } from 'next/navigation';
-
 import { useState } from 'react';
 
+// COMPONENTES
+import LoadingOverlay from '@/src/app/components/Loading';
+import Toast from '@/src/app/components/Toast';
+
+// ICONES
+import { Lock, Mail, ArrowRight, User } from 'lucide-react'
+
+// OUTROS
+import { motion } from 'framer-motion'
+
 export default function AdminLogin() {
+
   // NAVEGAÇÃO
   const router = useRouter();
 
@@ -18,6 +26,12 @@ export default function AdminLogin() {
   // FEEDBACK
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [toast, setToast] = useState<{ message: string; type?: "success" | "error" } | null>(null);
+
+  // FEEDBACK - TOAST
+  const showToast = (message: string, type: "success" | "error" = "success") => {
+    setToast({ message, type });
+  };
 
   // LOGIN
   const handleLogin = async (e: React.FormEvent) => {
@@ -33,14 +47,14 @@ export default function AdminLogin() {
       });
 
       if (!res.ok) {
-        setError("Usuário ou senha inválidos.");
+        showToast("Usuário ou senha inválidos.", "error");
         return;
       }
 
       router.push("/admin/dashboard");
 
     } catch {
-      setError("Erro ao conectar com o servidor.");
+      showToast("Erro ao conectar com o servidor.", "error");
     } finally {
       setLoading(false);
     }
@@ -51,6 +65,9 @@ export default function AdminLogin() {
 
       {/* Loading */}
       <LoadingOverlay show={loading} message="Autenticando..." />
+
+      {/* Toast */}
+      {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
 
       <motion.div
         initial={{ opacity: 0, y: 40 }}
@@ -72,19 +89,19 @@ export default function AdminLogin() {
         {/* Formulário */}
         <form onSubmit={handleLogin} className="space-y-8">
 
-          {/* Email */}
+          {/* Usuario */}
           <div>
             <label className="text-sm text-[#5C6B5E] mb-2 block">
-              Email
+              Usuario
             </label>
             <div className="flex items-center gap-3 px-5 py-4 rounded-full border border-[#E2E8F0] focus-within:border-[#A3B18A] transition">
-              <Mail className="w-5 h-5 text-[#A3B18A]" />
+              <User className="w-5 h-5 text-[#A3B18A]" />
               <input
                 required
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 type="name"
-                placeholder="admin@caminhosdaironia.com"
+                placeholder="Seu usuario"
                 className="w-full bg-transparent outline-none text-[#2D362E]"
               />
             </div>
@@ -115,7 +132,7 @@ export default function AdminLogin() {
             type="submit"
             className="w-full flex items-center justify-center gap-4 px-8 py-4 bg-[#4A5D4E] text-white rounded-full uppercase text-xs tracking-[0.3em] hover:bg-[#5C6B5E] transition"
           >
-            Entrar
+            {loading ? "Autenticando..." : "Entrar"}
             <ArrowRight className="w-4 h-4" />
           </motion.button>
 

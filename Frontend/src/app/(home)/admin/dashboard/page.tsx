@@ -12,6 +12,8 @@ import LoadingOverlay from '@/src/app/components/Loading';
 import Toast from '@/src/app/components/Toast';
 import { ComponentType } from 'react';
 import FeedbackModal from '@/src/app/components/FeedbackModal';
+import BottomNav from '@/src/app/components/BottomNav';
+import StickyFilter from '@/src/app/components/StickyFilter';
 
 interface StatCardProps {
   title: string;
@@ -45,6 +47,9 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [toast, setToast] = useState<{ message: string; type?: "success" | "error" } | null>(null);
+
+  // FILTRO
+  const [searchTerm, setSearchTerm] = useState('');
 
   // MODAL FEEDBACK
   const [modalOpen, setModalOpen] = useState(false);
@@ -169,8 +174,8 @@ export default function AdminDashboard() {
 
   const menuItems = [
     { id: 'dashboard', label: 'Visão Geral', icon: <LayoutDashboard className="w-5 h-5" /> },
-    { id: 'gratuitos', label: 'Solicitações Grátis', icon: <Gift className="w-5 h-5" /> },
-    { id: 'agendamentos', label: 'Agendamentos Pagos', icon: <CreditCard className="w-5 h-5" /> },
+    { id: 'gratuitos', label: 'Espelhamento por Consiência', icon: <Gift className="w-5 h-5" /> },
+    { id: 'agendamentos', label: 'Agendamentos', icon: <CreditCard className="w-5 h-5" /> },
     { id: 'configuracoes', label: 'Configurações', icon: <Settings className="w-5 h-5" /> },
   ];
 
@@ -222,7 +227,7 @@ export default function AdminDashboard() {
       {/* Sidebar */}
       <aside
         className={`${isSidebarOpen ? 'w-72' : 'w-20'
-          } bg-white border-r border-[#E2E8F0] transition-all duration-300 flex flex-col fixed h-full z-50`}
+          } bg-white hidden md:flex border-r border-[#E2E8F0] transition-all duration-300 flex flex-col fixed h-full z-50`}
       >
         <div className="p-6 flex items-center justify-between">
           {isSidebarOpen && (
@@ -236,7 +241,7 @@ export default function AdminDashboard() {
           )};
           <button
             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-            className="p-2 hover:bg-[#F8F9F5] rounded-lg transition-colors"
+            className="relative right-1.5 p-2 hover:bg-[#F8F9F5] rounded-lg transition-colors"
           >
             <Menu className="w-5 h-5 text-[#5C6B5E]" />
           </button>
@@ -270,17 +275,17 @@ export default function AdminDashboard() {
       </aside>
 
       {/* Main Content */}
-      <main className={`flex-1 transition-all duration-300 ${isSidebarOpen ? 'ml-72' : 'ml-20'} p-8 md:p-12`}>
+      <main className={`flex-1 h-screen overflow-y-auto transition-all duration-300 ${isSidebarOpen ? 'md:ml-72' : 'md:ml-20'} ml-0 p-6 md:p-12 pb-32 md:pb-12`}>
 
         {/* Top Bar */}
         <header className="flex justify-between items-center mb-12">
           <div>
-            <h1 className="font-serif text-3xl md:text-4xl">
+            <h1 className="font-serif mt-5 text-3xl md:text-4xl">
               {menuItems.find(i => i.id === activeTab)?.label}
             </h1>
             <p className="text-[#5C6B5E] text-sm mt-1">Bem-vindo de volta ao seu painel de controle.</p>
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center mb-5 gap-4">
             <button className="p-3 bg-white border border-[#E2E8F0] rounded-full hover:shadow-sm transition-all relative">
               <Bell className="w-5 h-5 text-[#5C6B5E]" />
               <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
@@ -365,15 +370,11 @@ export default function AdminDashboard() {
               animate={{ opacity: 1, x: 0 }}
               className="space-y-8"
             >
-              <div className="flex flex-col md:flex-row gap-4 items-center justify-between bg-white p-6 rounded-3xl border border-[#E2E8F0]">
-                <div className="relative flex-1 w-full">
-                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#5C6B5E]/50" />
-                  <input type="text" placeholder="Buscar solicitações grátis..." className="w-full pl-11 pr-4 py-3 bg-[#F8F9F5] border-none rounded-xl text-sm focus:ring-2 focus:ring-[#A3B18A]/20 outline-none" />
-                </div>
-                <button className="flex items-center gap-2 px-6 py-3 bg-[#F8F9F5] rounded-xl text-sm font-medium hover:bg-[#E2E8F0] transition-colors">
-                  <Filter className="w-4 h-4" /> Filtrar
-                </button>
-              </div>
+              {/* FILTRO */}
+              <StickyFilter
+                searchTerm={searchTerm}
+                setSearchTerm={setSearchTerm}
+              />
 
               <div className="space-y-6">
                 {solicitacoes.map((s) => (
@@ -428,6 +429,9 @@ export default function AdminDashboard() {
           )}
         </AnimatePresence>
       </main>
+
+      <BottomNav activeTab={activeTab} setActiveTab={setActiveTab} />
+
     </div>
   );
 }
